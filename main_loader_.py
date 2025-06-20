@@ -12,7 +12,14 @@ class GameLauncherApp:
 
     
     def create_widgets(self):
-        pass
+        tk.Label(self.root, text="Select a Game", font=("Helvetica", 20), bg="white").pack(pady=20)
+
+        frame = tk.Frame(self.root, bg="white")
+        frame.pack()
+
+        self.add_game_button(frame, "Game 1", "assets/game1.png", self.launch_game1)
+        self.add_game_button(frame, "Game 2", "assets/game2.png", self.launch_game2)
+
 
 
     def add_game_button(self, parent, title, img_path, command):
