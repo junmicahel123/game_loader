@@ -20,6 +20,18 @@ class GameLauncherApp:
         self.add_game_button(frame, "Game 1", "assets/game1.png", self.launch_game1)
         self.add_game_button(frame, "Game 2", "assets/game2.png", self.launch_game2)
 
+        video_btn = tk.Button(
+            self.root,
+            text="🎬 Watch Video",
+            font=("Arial", 14),
+            bg="#0099ff",
+            fg="white",
+            command=self.play_video,
+            padx=20,
+            pady=10
+        )
+        video_btn.pack(pady=30)
+
 
 
     def add_game_button(self, parent, title, img_path, command):
