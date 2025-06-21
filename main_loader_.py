@@ -10,7 +10,7 @@ class GameLauncherApp:
         self.root = root
         self.root.title("Game Launcher")
         self.root.geometry("500x450")
-        self.root.configure(bg="white")
+        self.root.configure(bg="pink")
         self.create_widgets()
 
     
@@ -20,8 +20,8 @@ class GameLauncherApp:
         frame = tk.Frame(self.root, bg="white")
         frame.pack()
 
-        self.add_game_button(frame, "Game 1", "assets/game1.png", self.launch_game1)
-        self.add_game_button(frame, "Game 2", "assets/game2.png", self.launch_game2)
+        self.add_game_button(frame, "Game 1", "game1.png", self.launch_game1)
+        self.add_game_button(frame, "Game 2", "game2.png", self.launch_game2)
 
         video_btn = tk.Button(
             self.root,
@@ -48,7 +48,7 @@ class GameLauncherApp:
 
         btn = tk.Button(parent, text=title, image=photo, compound="top",
                         command=command, width=140, height=150)
-        btn.image = photo  # Save reference to prevent garbage collection
+        btn.image = photo  
         btn.pack(side="left", padx=15)
 
     def launch_game1(self):
@@ -65,7 +65,7 @@ class GameLauncherApp:
 
 
     def play_video(self):
-        video_path = os.path.abspath("assets/sample_video.mp4")
+        video_path = os.path.abspath("sample_video.mp4")
         try:
             webbrowser.open(video_path)
         except Exception as e:
