@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
-
+from PIL import Image, ImageTk
+import subprocess
+import webbrowser
+import os
 
 class GameLauncherApp:
     def __init__(self, root):
@@ -35,19 +38,38 @@ class GameLauncherApp:
 
 
     def add_game_button(self, parent, title, img_path, command):
-        pass
+        try:
+            img = Image.open(img_path)
+            img = img.resize((120, 120))
+            photo = ImageTk.PhotoImage(img)
+        except Exception as e:
+            photo = None
+            print(f"Error loading image {img_path}: {e}")
+
+        btn = tk.Button(parent, text=title, image=photo, compound="top",
+                        command=command, width=140, height=150)
+        btn.image = photo  # Save reference to prevent garbage collection
+        btn.pack(side="left", padx=15)
 
     def launch_game1(self):
-        pass
+        self.run_script("game_no_1.py")
     
     def launch_game2(self):
-        pass
+        self.run_script("game_no_2.py")
 
     def run_script(self, filename):
-        pass
+        try:
+            subprocess.Popen(["python", filename])
+        except Exception as e:
+            messagebox.showerror("Error", f"Could not launch {filename}\n{e}")
+
 
     def play_video(self):
-        pass
+        video_path = os.path.abspath("assets/sample_video.mp4")
+        try:
+            webbrowser.open(video_path)
+        except Exception as e:
+            messagebox.showerror("Error", f"Could not play video\n{e}")
 
 if __name__ == "__main__":
     root = tk.Tk()
