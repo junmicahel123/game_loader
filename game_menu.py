@@ -1,5 +1,6 @@
 from grid import Grid
-from blocks import *
+from blocks import IBlock, JBlock, LBlock, OBlock, SBlock, TBlock, ZBlock
+
 import random
 import pygame
 
