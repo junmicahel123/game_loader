@@ -1,5 +1,5 @@
 import pygame,sys
-from game import Game
+from game_menu import Game
 from colors import Colors
 
 pygame.init()
