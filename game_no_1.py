@@ -1,104 +1,63 @@
-# Copied Coded From github - educ8s
+import pygame,sys
+from game import Game
+from colors import Colors
 
-from grid import Grid
-from blocks import *
-import random
-import pygame
+pygame.init()
 
-class Game:
-	def __init__(self):
-		self.grid = Grid()
-		self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
-		self.current_block = self.get_random_block()
-		self.next_block = self.get_random_block()
-		self.game_over = False
-		self.score = 0
-		self.rotate_sound = pygame.mixer.Sound("Sounds/rotate.ogg")
-		self.clear_sound = pygame.mixer.Sound("Sounds/clear.ogg")
+title_font = pygame.font.Font(None, 40)
+score_surface = title_font.render("Score", True, Colors.white)
+next_surface = title_font.render("Next", True, Colors.white)
+game_over_surface = title_font.render("GAME OVER", True, Colors.white)
 
-		pygame.mixer.music.load("Sounds/music.ogg")
-		pygame.mixer.music.play(-1)
+score_rect = pygame.Rect(320, 55, 170, 60)
+next_rect = pygame.Rect(320, 215, 170, 180)
 
-	def update_score(self, lines_cleared, move_down_points):
-		if lines_cleared == 1:
-			self.score += 100
-		elif lines_cleared == 2:
-			self.score += 300
-		elif lines_cleared == 3:
-			self.score += 500
-		self.score += move_down_points
+screen = pygame.display.set_mode((500, 620))
+pygame.display.set_caption("Python Tetris")
 
-	def get_random_block(self):
-		if len(self.blocks) == 0:
-			self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
-		block = random.choice(self.blocks)
-		self.blocks.remove(block)
-		return block
+clock = pygame.time.Clock()
 
-	def move_left(self):
-		self.current_block.move(0, -1)
-		if self.block_inside() == False or self.block_fits() == False:
-			self.current_block.move(0, 1)
+game = Game()
 
-	def move_right(self):
-		self.current_block.move(0, 1)
-		if self.block_inside() == False or self.block_fits() == False:
-			self.current_block.move(0, -1)
+GAME_UPDATE = pygame.USEREVENT
+pygame.time.set_timer(GAME_UPDATE, 200)
 
-	def move_down(self):
-		self.current_block.move(1, 0)
-		if self.block_inside() == False or self.block_fits() == False:
-			self.current_block.move(-1, 0)
-			self.lock_block()
+while True:
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			pygame.quit()
+			sys.exit()
+		if event.type == pygame.KEYDOWN:
+			if game.game_over == True:
+				game.game_over = False
+				game.reset()
+			if event.key == pygame.K_LEFT and game.game_over == False:
+				game.move_left()
+			if event.key == pygame.K_RIGHT and game.game_over == False:
+				game.move_right()
+			if event.key == pygame.K_DOWN and game.game_over == False:
+				game.move_down()
+				game.update_score(0, 1)
+			if event.key == pygame.K_UP and game.game_over == False:
+				game.rotate()
+		if event.type == GAME_UPDATE and game.game_over == False:
+			game.move_down()
 
-	def lock_block(self):
-		tiles = self.current_block.get_cell_positions()
-		for position in tiles:
-			self.grid.grid[position.row][position.column] = self.current_block.id
-		self.current_block = self.next_block
-		self.next_block = self.get_random_block()
-		rows_cleared = self.grid.clear_full_rows()
-		if rows_cleared > 0:
-			self.clear_sound.play()
-			self.update_score(rows_cleared, 0)
-		if self.block_fits() == False:
-			self.game_over = True
+	#Drawing
+	score_value_surface = title_font.render(str(game.score), True, Colors.white)
 
-	def reset(self):
-		self.grid.reset()
-		self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
-		self.current_block = self.get_random_block()
-		self.next_block = self.get_random_block()
-		self.score = 0
+	screen.fill(Colors.dark_blue)
+	screen.blit(score_surface, (365, 20, 50, 50))
+	screen.blit(next_surface, (375, 180, 50, 50))
 
-	def block_fits(self):
-		tiles = self.current_block.get_cell_positions()
-		for tile in tiles:
-			if self.grid.is_empty(tile.row, tile.column) == False:
-				return False
-		return True
+	if game.game_over == True:
+		screen.blit(game_over_surface, (320, 450, 50, 50))
 
-	def rotate(self):
-		self.current_block.rotate()
-		if self.block_inside() == False or self.block_fits() == False:
-			self.current_block.undo_rotation()
-		else:
-			self.rotate_sound.play()
+	pygame.draw.rect(screen, Colors.light_blue, score_rect, 0, 10)
+	screen.blit(score_value_surface, score_value_surface.get_rect(centerx = score_rect.centerx, 
+		centery = score_rect.centery))
+	pygame.draw.rect(screen, Colors.light_blue, next_rect, 0, 10)
+	game.draw(screen)
 
-	def block_inside(self):
-		tiles = self.current_block.get_cell_positions()
-		for tile in tiles:
-			if self.grid.is_inside(tile.row, tile.column) == False:
-				return False
-		return True
-
-	def draw(self, screen):
-		self.grid.draw(screen)
-		self.current_block.draw(screen, 11, 11)
-
-		if self.next_block.id == 3:
-			self.next_block.draw(screen, 255, 290)
-		elif self.next_block.id == 4:
-			self.next_block.draw(screen, 255, 280)
-		else:
-			self.next_block.draw(screen, 270, 270)
+	pygame.display.update()
+	clock.tick(60)
