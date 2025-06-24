@@ -8,6 +8,13 @@ import random
 import pygame
 import pygame,sys
 
+def resource_path(relative_path):
+    import sys
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 # ALL THE CODE BUT IN ONE SINGULAR FILE SO I CAN CONVERT IT TO EXE.
 class GameLauncherApp:
     def __init__(self, root):
@@ -52,7 +59,7 @@ class GameLauncherApp:
 
     def add_game_button(self, parent, title, img_path, command):
         try:
-            img = Image.open(img_path)
+            img = Image.open(resource_path(img_path))
             img = img.resize((120, 120))
             photo = ImageTk.PhotoImage(img)
         except Exception as e:
@@ -94,7 +101,7 @@ class GameLauncherApp:
             messagebox.showerror("Error", f"Could not launch {filename}\n{e}")
 
     def play_video(self):
-        video_path = os.path.abspath("sample_video.mp4")
+        video_path = resource_path("sample_video.mp4")
         try:
             webbrowser.open(video_path)
         except Exception as e:
