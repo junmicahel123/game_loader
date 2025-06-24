@@ -182,10 +182,10 @@ class Game:
 		self.next_block = self.get_random_block()
 		self.game_over = False
 		self.score = 0
-		self.rotate_sound = pygame.mixer.Sound("rotate.ogg")
-		self.clear_sound = pygame.mixer.Sound("clear.ogg")
-
-		pygame.mixer.music.load("music.ogg")
+		self.rotate_sound = pygame.mixer.Sound(resource_path("rotate.ogg"))
+		self.clear_sound = pygame.mixer.Sound(resource_path("clear.ogg"))
+    
+		pygame.mixer.music.load(resource_path("music.ogg"))
 		pygame.mixer.music.play(-1)
 
 	def update_score(self, lines_cleared, move_down_points):
@@ -252,7 +252,7 @@ class Game:
 		if self.block_inside() == False or self.block_fits() == False:
 			self.current_block.undo_rotation()
 		else:
-			self.rotate_sound.play()
+			self.rotate_sound = pygame.mixer.Sound(resource_path("rotate.ogg"))
 
 	def block_inside(self):
 		tiles = self.current_block.get_cell_positions()
