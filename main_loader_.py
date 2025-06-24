@@ -8,17 +8,23 @@ import os
 class GameLauncherApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Game Launcher")
-        self.root.geometry("500x450")
-        self.root.configure(bg="pink")
+        self.root.title("🎮 Game Launcher")
+        self.root.geometry("600x500")
+        self.root.configure(bg="#ffe6f0") 
         self.create_widgets()
 
-    
     def create_widgets(self):
-        tk.Label(self.root, text="Select a Game", font=("Helvetica", 20), bg="white").pack(pady=20)
+        title = tk.Label(
+            self.root,
+            text="🎮 Choose Your Game",
+            font=("Segoe UI", 24, "bold"),
+            bg="#ffe6f0",
+            fg="#333"
+        )
+        title.pack(pady=25)
 
-        frame = tk.Frame(self.root, bg="white")
-        frame.pack()
+        frame = tk.Frame(self.root, bg="#ffe6f0")
+        frame.pack(pady=10)
 
         self.add_game_button(frame, "Game 1", "game1.png", self.launch_game1)
         self.add_game_button(frame, "Game 2", "game2.png", self.launch_game2)
@@ -26,16 +32,19 @@ class GameLauncherApp:
         video_btn = tk.Button(
             self.root,
             text="🎬 Watch Video",
-            font=("Arial", 14),
-            bg="#0099ff",
+            font=("Segoe UI", 14, "bold"),
+            bg="#ff4da6",
             fg="white",
+            activebackground="#e60073",
+            activeforeground="white",
             command=self.play_video,
             padx=20,
-            pady=10
+            pady=12,
+            relief="flat",
+            bd=0,
+            cursor="hand2"
         )
-        video_btn.pack(pady=30)
-
-
+        video_btn.pack(pady=40)
 
     def add_game_button(self, parent, title, img_path, command):
         try:
@@ -46,10 +55,27 @@ class GameLauncherApp:
             photo = None
             print(f"Error loading image {img_path}: {e}")
 
-        btn = tk.Button(parent, text=title, image=photo, compound="top",
-                        command=command, width=140, height=150)
-        btn.image = photo  
-        btn.pack(side="left", padx=15)
+        container = tk.Frame(parent, bg="#ffe6f0")
+        container.pack(side="left", padx=25)
+
+        btn = tk.Button(
+            container,
+            text=title,
+            image=photo,
+            compound="top",
+            font=("Segoe UI", 12),
+            command=command,
+            width=140,
+            height=160,
+            bg="white",
+            fg="#333",
+            relief="raised",
+            bd=2,
+            cursor="hand2",
+            activebackground="#ffb3d9"
+        )
+        btn.image = photo
+        btn.pack()
 
     def launch_game1(self):
         self.run_script("game_no_1.py")
@@ -63,7 +89,6 @@ class GameLauncherApp:
         except Exception as e:
             messagebox.showerror("Error", f"Could not launch {filename}\n{e}")
 
-
     def play_video(self):
         video_path = os.path.abspath("sample_video.mp4")
         try:
@@ -75,6 +100,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = GameLauncherApp(root)
     root.mainloop()
-
-
-    
