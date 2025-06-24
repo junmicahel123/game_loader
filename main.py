@@ -7,9 +7,10 @@ import os
 import random
 import pygame
 import pygame,sys
+from sys import _MEIPASS
+import os, sys
 
 def resource_path(relative_path):
-    import sys
     try:
         base_path = sys._MEIPASS
     except AttributeError:
