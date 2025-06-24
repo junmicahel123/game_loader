@@ -3,11 +3,11 @@ import random
 import math
 
 class Game2048:
-    def __init__(self):
+    def __init__(self, width=500, height=500):
         pygame.init()
 
         self.FPS = 60
-        self.WIDTH, self.HEIGHT = 800, 800
+        self.WIDTH, self.HEIGHT = width, height
         self.ROWS, self.COLS = 4, 4
         self.RECT_HEIGHT = self.HEIGHT // self.ROWS
         self.RECT_WIDTH = self.WIDTH // self.COLS
@@ -17,11 +17,12 @@ class Game2048:
         self.BACKGROUND_COLOR = (205, 192, 180)
         self.FONT_COLOR = (119, 110, 101)
 
-        self.FONT = pygame.font.SysFont("comicsans", 60, bold=True)
+        self.FONT = pygame.font.SysFont("comicsans", 40, bold=True)
         self.MOVE_VEL = 20
 
+        # Create a separate game window (title shown independently)
         self.WINDOW = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        pygame.display.set_caption("2048 Game")
+        pygame.display.set_caption("2048 Mini Game")
 
     class Tile:
         COLORS = [
@@ -49,11 +50,11 @@ class Game2048:
 
         def get_color(self):
             color_index = int(math.log2(self.value)) - 1
-            return self.COLORS[min(color_index, len(self.COLORS)-1)]
+            return self.COLORS[min(color_index, len(self.COLORS) - 1)]
 
         def draw(self, window):
             pygame.draw.rect(window, self.get_color(), (self.x, self.y, self.width, self.height))
-            text = self.font.render(str(self.value), 1, self.font_color)
+            text = self.font.render(str(self.value), True, self.font_color)
             window.blit(
                 text,
                 (
@@ -208,5 +209,4 @@ class Game2048:
 
 
 if __name__ == "__main__":
-    game = Game2048()
-    game.run()
+    Game2048(width=360, height=360).run()
